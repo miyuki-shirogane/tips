@@ -1,12 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <title>☕️ 打赏作者1440</title>
+  <meta charset="UTF-8" />
+  <title>☕️ 打赏</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f2f2f2, #e6e6e6);
+    }
+
+    /* ⬆️ 卡片整体变大 */
+    .card {
+      background: #fff;
+      padding: 70px 60px;
+      border-radius: 32px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+      text-align: center;
+      width: 520px;
+      max-width: 92%;
+    }
+
+    .emoji {
+      font-size: 72px;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    h3 {
+      font-size: 40px;
+      margin: 0 0 50px;
+      color: #222;
+      font-weight: 600;
+    }
+
+    /* ⬆️ 按钮再放大 */
+    #tip {
+      padding: 22px 52px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #000;
+      background: #fff;
+      border: 2px solid #ccc;
+      border-radius: 999px; /* 极圆 */
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    #tip:hover {
+      background: #fafafa;
+      border-color: #999;
+      transform: translateY(-1px);
+    }
+
+    #tip:active {
+      background: #eee;
+      transform: translateY(0);
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 16px;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-  <h3>💖 感谢支持</h3>
-  <button id="tip">打赏 2000 CKB</button>
+  <div class="card">
+    <span class="emoji">☕️</span>
+    <h3>请作者喝杯咖啡</h3>
+
+    <button id="tip">打赏 2000 CKB</button>
+
+    <div class="footer">
+      你的支持会让这个 AI 持续运行 ❤️
+    </div>
+  </div>
 
   <script>
     async function tip() {
@@ -18,7 +91,7 @@
         }
 
         const res = await s.transferCKB(
-          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",  // 你的地址
+          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
           2000 * 10 ** 8
         )
 
