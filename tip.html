@@ -6,7 +6,7 @@
 </head>
 <body>
   <h2>☕️ 打赏作者</h2>
-  <button id="tipBtn">打赏 2000 CKB</button>
+  <button id="tipBtn" disabled>打赏 2000 CKB</button>
 
   <script>
     async function tip() {
@@ -21,7 +21,7 @@
         console.log("已连接钱包:", wallet.address);
 
         const res = await s.transferCKB(
-          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",    // 替换为你的钱包地址
+          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
           2000 * 10 ** 8
         );
 
@@ -33,15 +33,12 @@
       }
     }
 
-    // 等待 Bridge 初始化
+    // 仅在 Wallet 内启用按钮
     window.addEventListener("superiseReady", () => {
       const btn = document.getElementById("tipBtn");
-      btn.disabled = false;  // 可选：按钮初始禁用，避免未初始化点击
+      btn.disabled = false;
       btn.addEventListener("click", tip);
     });
-
-    // 初始按钮禁用，等待 Bridge
-    document.getElementById("tipBtn").disabled = true;
   </script>
 </body>
 </html>
