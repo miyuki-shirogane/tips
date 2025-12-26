@@ -1,44 +1,35 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>打赏作者</title>
+  <meta charset="utf-8" />
+  <title>☕️ 打赏作者</title>
 </head>
 <body>
-  <h2>☕️ 打赏作者</h2>
-  <button id="tipBtn" disabled>打赏 2000 CKB</button>
+  <h3>1437</h3>
+  <button id="tip">打赏 10 CKB</button>
 
   <script>
     async function tip() {
-      const s = window.superise;
-      if (!s) {
-        alert("请在 SupeRISE 钱包内打开此页面");
-        return;
-      }
-
       try {
-        const wallet = await s.connectCkb();
-        console.log("已连接钱包:", wallet.address);
+        const s = window.superise
+        if (!s) {
+          alert("请在 SupeRISE 钱包内打开")
+          return
+        }
 
         const res = await s.transferCKB(
-          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
+          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",  // 你的地址
           2000 * 10 ** 8
-        );
+        )
 
-        alert("感谢支持！\n交易哈希: " + res.txHash);
-        window.close();
+        alert("感谢支持！\nTx: " + res.txHash)
+        window.close()
       } catch (e) {
-        console.error(e);
-        alert("已取消或失败：" + e.message);
+        alert("已取消或失败：" + e.message)
       }
     }
 
-    // 仅在 Wallet 内启用按钮
-    window.addEventListener("superiseReady", () => {
-      const btn = document.getElementById("tipBtn");
-      btn.disabled = false;
-      btn.addEventListener("click", tip);
-    });
+    document.getElementById("tip").onclick = tip
   </script>
 </body>
 </html>
