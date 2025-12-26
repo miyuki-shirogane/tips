@@ -7,46 +7,46 @@
     body {
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;   /* 不再垂直居中 */
       height: 100vh;
       margin: 0;
       font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(135deg, #f2f2f2, #e6e6e6);
     }
 
-    /* ⬆️ 卡片整体变大 */
+    /* ⬆️ 卡片更大 + 上移到 30% */
     .card {
+      margin-top: 30vh;          /* 关键：视觉中心上移 */
       background: #fff;
-      padding: 70px 60px;
-      border-radius: 32px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+      padding: 80px 70px;
+      border-radius: 36px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.18);
       text-align: center;
-      width: 520px;
+      width: 620px;
       max-width: 92%;
     }
 
     .emoji {
-      font-size: 72px;
-      margin-bottom: 24px;
+      font-size: 80px;
+      margin-bottom: 28px;
       display: block;
     }
 
     h3 {
-      font-size: 40px;
-      margin: 0 0 50px;
+      font-size: 42px;
+      margin: 0 0 56px;
       color: #222;
       font-weight: 600;
     }
 
-    /* ⬆️ 按钮再放大 */
     #tip {
-      padding: 22px 52px;
-      font-size: 26px;
+      padding: 24px 64px;
+      font-size: 28px;
       font-weight: 600;
       color: #000;
       background: #fff;
       border: 2px solid #ccc;
-      border-radius: 999px; /* 极圆 */
+      border-radius: 999px;
       cursor: pointer;
       transition: all 0.18s ease;
     }
@@ -63,8 +63,8 @@
     }
 
     .footer {
-      margin-top: 40px;
-      font-size: 16px;
+      margin-top: 44px;
+      font-size: 17px;
       color: #777;
     }
   </style>
