@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>打赏作者</title>
+</head>
+<body>
+  <h2>💖 打赏作者</h2>
+  <p>点击下面按钮完成 CKB 打赏</p>
+  <button id="tip">打赏 10 CKB</button>
+
+  <script>
+    async function tip() {
+      const s = window.superise
+      if (!s) {
+        alert("请在 SupeRISE 钱包内打开此页面")
+        return
+      }
+
+      try {
+        // 可选：先连接钱包
+        await s.connectCkb()
+
+        // 转账
+        const res = await s.transferCKB(
+          "ckb1qxxxx...",  // 替换成你的钱包地址
+          10 * 10 ** 8     // 打赏 10 CKB
+        )
+
+        alert("感谢支持！\n交易哈希: " + res.txHash)
+        window.close()
+      } catch (e) {
+        alert("已取消或失败：" + e.message)
+      }
+    }
+
+    document.getElementById("tip").onclick = tip
+  </script>
+</body>
+</html>
