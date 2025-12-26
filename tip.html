@@ -1,40 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8">
   <title>打赏作者</title>
 </head>
 <body>
-  <h2>💖 打赏作者</h2>
-  <p>点击下面按钮完成 CKB 打赏</p>
-  <button id="tip">打赏 10 CKB</button>
+  <h2>☕️ 打赏作者</h2>
+  <button id="tipBtn">打赏 2000 CKB</button>
 
   <script>
     async function tip() {
-      const s = window.superise
+      const s = window.superise;
       if (!s) {
-        alert("请在 SupeRISE 钱包内打开此页面")
-        return
+        alert("请在 SupeRISE 钱包内打开此页面");
+        return;
       }
 
       try {
-        // 可选：先连接钱包
-        await s.connectCkb()
+        const wallet = await s.connectCkb();
+        console.log("已连接钱包:", wallet.address);
 
-        // 转账
         const res = await s.transferCKB(
-          "ckb1qxxxx...",  // 替换成你的钱包地址
-          10 * 10 ** 8     // 打赏 10 CKB
-        )
+          "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",    // 替换为你的钱包地址
+          2000 * 10 ** 8
+        );
 
-        alert("感谢支持！\n交易哈希: " + res.txHash)
-        window.close()
+        alert("感谢支持！\n交易哈希: " + res.txHash);
+        window.close();
       } catch (e) {
-        alert("已取消或失败：" + e.message)
+        console.error(e);
+        alert("已取消或失败：" + e.message);
       }
     }
 
-    document.getElementById("tip").onclick = tip
+    // 等待 Bridge 初始化
+    window.addEventListener("superiseReady", () => {
+      const btn = document.getElementById("tipBtn");
+      btn.disabled = false;  // 可选：按钮初始禁用，避免未初始化点击
+      btn.addEventListener("click", tip);
+    });
+
+    // 初始按钮禁用，等待 Bridge
+    document.getElementById("tipBtn").disabled = true;
   </script>
 </body>
 </html>
