@@ -1,280 +1,8 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="zh-CN">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8" />-->
-<!--  <title>☕️ 打赏 & 进入应用</title>-->
-<!--  <style>-->
-<!--    body {-->
-<!--      display: flex;-->
-<!--      justify-content: center;-->
-<!--      align-items: flex-start;-->
-<!--      height: 100vh;-->
-<!--      margin: 0;-->
-<!--      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;-->
-<!--      background: linear-gradient(135deg, #f2f2f2, #e6e6e6);-->
-<!--    }-->
-
-<!--    .card {-->
-<!--      margin-top: 6vh;-->
-<!--      background: #fff;-->
-<!--      padding: 80px 70px;-->
-<!--      border-radius: 36px;-->
-<!--      box-shadow: 0 24px 60px rgba(0,0,0,0.18);-->
-<!--      text-align: center;-->
-<!--      width: 620px;-->
-<!--      max-width: 92%;-->
-<!--    }-->
-
-<!--    .emoji {-->
-<!--      font-size: 80px;-->
-<!--      margin-bottom: 28px;-->
-<!--      display: block;-->
-<!--    }-->
-
-<!--    h3 {-->
-<!--      font-size: 42px;-->
-<!--      margin: 0 0 36px;-->
-<!--      color: #222;-->
-<!--      font-weight: 600;-->
-<!--    }-->
-
-<!--    /* 按钮通用样式 */-->
-<!--    .btn {-->
-<!--      padding: 24px 64px;-->
-<!--      font-size: 28px;-->
-<!--      font-weight: 600;-->
-<!--      color: #000;-->
-<!--      background: #fff;-->
-<!--      border: 2px solid #ccc;-->
-<!--      border-radius: 999px;-->
-<!--      cursor: pointer;-->
-<!--      transition: all 0.18s ease;-->
-<!--      margin: 12px 0;-->
-<!--      width: 100%;-->
-<!--      box-sizing: border-box;-->
-<!--      text-decoration: none;-->
-<!--      display: inline-block;-->
-<!--    }-->
-
-<!--    .btn:hover {-->
-<!--      background: #fafafa;-->
-<!--      border-color: #999;-->
-<!--      transform: translateY(-1px);-->
-<!--    }-->
-
-<!--    .btn:active {-->
-<!--      background: #eee;-->
-<!--      transform: translateY(0);-->
-<!--    }-->
-
-<!--    /* 禁用状态 */-->
-<!--    .btn:disabled {-->
-<!--      opacity: 0.6;-->
-<!--      cursor: not-allowed;-->
-<!--      transform: none !important;-->
-<!--      background: #f5f5f5 !important;-->
-<!--      border-color: #ddd !important;-->
-<!--    }-->
-
-<!--    /* 连接钱包按钮 */-->
-<!--    #connectBtn {-->
-<!--      border-color: #4299e1;-->
-<!--      color: #4299e1;-->
-<!--    }-->
-
-<!--    #connectBtn:hover:not(:disabled) {-->
-<!--      background: #e8f4ff;-->
-<!--      border-color: #3182ce;-->
-<!--    }-->
-
-<!--    /* 打赏按钮 */-->
-<!--    #tipBtn {-->
-<!--      border-color: #48bb78;-->
-<!--      color: #48bb78;-->
-<!--      display: none;-->
-<!--    }-->
-
-<!--    #tipBtn:hover:not(:disabled) {-->
-<!--      background: #f0fdf4;-->
-<!--      border-color: #38a169;-->
-<!--    }-->
-
-<!--    /* 进入应用按钮 */-->
-<!--    #enterAppBtn {-->
-<!--      border-color: #9f7aea;-->
-<!--      color: #9f7aea;-->
-<!--    }-->
-
-<!--    #enterAppBtn:hover:not(:disabled) {-->
-<!--      background: #fdf2f8;-->
-<!--      border-color: #805ad5;-->
-<!--    }-->
-
-<!--    /* 状态提示 */-->
-<!--    .status {-->
-<!--      font-size: 20px;-->
-<!--      margin: 24px 0;-->
-<!--      min-height: 24px;-->
-<!--    }-->
-
-<!--    .status.success {-->
-<!--      color: #38a169;-->
-<!--    }-->
-
-<!--    .status.error {-->
-<!--      color: #e53e3e;-->
-<!--    }-->
-
-<!--    .status.warning {-->
-<!--      color: #dd6b20;-->
-<!--    }-->
-
-<!--    .footer {-->
-<!--      margin-top: 44px;-->
-<!--      font-size: 17px;-->
-<!--      color: #777;-->
-<!--    }-->
-<!--  </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--  <div class="card">-->
-<!--    <span class="emoji">☕️</span>-->
-<!--    <h3>欢迎使用！</h3>-->
-
-<!--    &lt;!&ndash; 状态提示 &ndash;&gt;-->
-<!--    <div id="status" class="status">检测钱包环境中...</div>-->
-
-<!--    &lt;!&ndash; 连接钱包按钮 &ndash;&gt;-->
-<!--    <button id="connectBtn" class="btn" disabled>连接 SupeRISE 钱包</button>-->
-
-<!--    &lt;!&ndash; 打赏按钮 &ndash;&gt;-->
-<!--    <button id="tipBtn" class="btn">打赏 2000 CKB 支持作者</button>-->
-
-<!--    &lt;!&ndash; 进入应用按钮 &ndash;&gt;-->
-<!--    <a href="http://192.168.12.100:8501" target="_self" id="enterAppBtn" class="btn">-->
-<!--      🚀 进入游戏应用-->
-<!--    </a>-->
-
-<!--    <div class="footer">-->
-<!--      感谢支持 ❤️-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <script>-->
-<!--    // 配置项（保留你之前的核心配置）-->
-<!--    const CONFIG = {-->
-<!--      CONNECT_TIMEOUT: 20000, // 20秒超时-->
-<!--      TIP_ADDRESS: "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",-->
-<!--      TIP_AMOUNT: 2000 * 10 ** 8, // 2000 CKB-->
-<!--      STREAMLIT_URL: "http://192.168.12.100:8501"-->
-<!--    };-->
-
-<!--    // 全局状态（保留连接状态）-->
-<!--    let walletConnected = false;-->
-<!--    let connectTimer = null;-->
-
-<!--    // DOM 元素-->
-<!--    const statusEl = document.getElementById("status");-->
-<!--    const connectBtn = document.getElementById("connectBtn");-->
-<!--    const tipBtn = document.getElementById("tipBtn");-->
-<!--    const enterAppBtn = document.getElementById("enterAppBtn");-->
-
-<!--    // 更新状态提示（保留原有逻辑）-->
-<!--    function updateStatus(text, type = "normal") {-->
-<!--      statusEl.textContent = text;-->
-<!--      statusEl.className = `status ${type}`;-->
-<!--    }-->
-
-<!--    // 初始化：检测钱包环境（保留原有逻辑）-->
-<!--    function init() {-->
-<!--      // 检测钱包环境-->
-<!--      if (!window.superise) {-->
-<!--        updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");-->
-<!--        connectBtn.disabled = true;-->
-<!--        return;-->
-<!--      }-->
-
-<!--      updateStatus("已检测到 SupeRISE 钱包，请点击按钮连接", "warning");-->
-<!--      connectBtn.disabled = false;-->
-<!--      // 绑定连接按钮事件-->
-<!--      connectBtn.addEventListener("click", connectWalletWithTimeout);-->
-<!--      // 绑定打赏按钮事件-->
-<!--      tipBtn.addEventListener("click", handleTip);-->
-<!--    }-->
-
-<!--    // 连接钱包（保留你验证过的超时逻辑）-->
-<!--    async function connectWalletWithTimeout() {-->
-<!--      connectBtn.disabled = true;-->
-<!--      updateStatus("正在请求连接钱包，请在钱包内确认...", "warning");-->
-
-<!--      // 设置超时定时器-->
-<!--      connectTimer = setTimeout(() => {-->
-<!--        updateStatus("连接超时，请重新尝试", "error");-->
-<!--        connectBtn.disabled = false;-->
-<!--        walletConnected = false;-->
-<!--      }, CONFIG.CONNECT_TIMEOUT);-->
-
-<!--      try {-->
-<!--        // 显式连接钱包（核心逻辑）-->
-<!--        const walletInfo = await window.superise.connectCkb();-->
-<!--        clearTimeout(connectTimer);-->
-
-<!--        // 连接成功-->
-<!--        walletConnected = true;-->
-<!--        updateStatus("钱包连接成功！可点击打赏", "success");-->
-<!--        connectBtn.style.display = "none";-->
-<!--        tipBtn.style.display = "block";-->
-<!--      } catch (error) {-->
-<!--        clearTimeout(connectTimer);-->
-<!--        updateStatus(`连接失败：${error.message}`, "error");-->
-<!--        connectBtn.disabled = false;-->
-<!--        walletConnected = false;-->
-<!--      }-->
-<!--    }-->
-
-<!--    // 打赏逻辑（保留原有支付逻辑）-->
-<!--    async function handleTip() {-->
-<!--      if (!walletConnected) {-->
-<!--        updateStatus("请先连接钱包", "error");-->
-<!--        return;-->
-<!--      }-->
-
-<!--      try {-->
-<!--        updateStatus("正在发起转账，请在钱包内确认...", "warning");-->
-<!--        tipBtn.disabled = true;-->
-
-<!--        // 调用转账API（核心支付逻辑）-->
-<!--        const res = await window.superise.transferCKB(-->
-<!--          CONFIG.TIP_ADDRESS,-->
-<!--          CONFIG.TIP_AMOUNT,-->
-<!--          Date.now() + 120000 // 2分钟过期-->
-<!--        );-->
-
-<!--        // 支付成功-->
-<!--        updateStatus("打赏成功！感谢支持～", "success");-->
-<!--        alert(`感谢支持！\n交易哈希：${res.txHash}`);-->
-<!--        // 自动跳转Streamlit-->
-<!--        window.location.href = CONFIG.STREAMLIT_URL;-->
-<!--      } catch (error) {-->
-<!--        updateStatus(`打赏失败：${error.message}`, "error");-->
-<!--        alert(`已取消或失败：${error.message}`);-->
-<!--        tipBtn.disabled = false;-->
-<!--      }-->
-<!--    }-->
-
-<!--    // 页面加载+Bridge就绪初始化-->
-<!--    window.addEventListener("DOMContentLoaded", init);-->
-<!--    window.addEventListener("superiseReady", init);-->
-<!--  </script>-->
-<!--</body>-->
-<!--</html>-->
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>☕️ 打赏 & 进入应用</title>
+  <title>🎮 20Q Game</title>
   <style>
     * {
       margin: 0;
@@ -288,119 +16,99 @@
       background: linear-gradient(135deg, #f8f9fa, #e9ecef);
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      padding: 0; /* 移除页面默认内边距，置顶显示 */
+      margin: 0;
+      align-items: flex-start; /* 置顶对齐 */
+      padding-top: 40px; /* 顶部仅留少量间距，避免贴边 */
     }
 
     .container {
       width: 100%;
-      max-width: 650px;
+      max-width: 750px; /* 加宽容器，更大气 */
       display: flex;
       flex-direction: column;
-      gap: 25px;
+      gap: 30px; /* 加大卡片间距 */
+      padding: 0 20px;
     }
 
-    /* 标题区域 - 轻量化设计 */
+    /* 标题区域 - 放大更醒目 */
     .header {
       text-align: center;
-      padding: 10px 0;
+      padding: 15px 0;
       position: relative;
-    }
-
-    .header::after {
-      content: "";
-      display: block;
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(90deg, #4299e1, #9f7aea);
-      margin: 20px auto 0;
-      border-radius: 3px;
-    }
-
-    .emoji {
-      font-size: 80px;
-      margin-bottom: 15px;
-      display: block;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+      margin-bottom: 10px;
     }
 
     .main-title {
-      font-size: 38px;
+      font-size: 48px; /* 放大标题 */
       color: #2d3748;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-weight: 800; /* 加粗更醒目 */
+      letter-spacing: 1px; /* 字间距更舒展 */
     }
 
-    .sub-title {
-      font-size: 18px;
-      color: #718096;
-      line-height: 1.5;
-    }
-
-    /* 通用操作卡片样式 */
+    /* 通用操作卡片样式 - 放大更大气 */
     .card {
       background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-      padding: 35px 40px;
+      border-radius: 28px; /* 更大圆角 */
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1); /* 更明显阴影 */
+      padding: 45px 50px; /* 加大内边距，更饱满 */
       text-align: center;
       transition: transform 0.2s ease;
+      width: 100%;
+      max-width: 700px; /* 加大卡片最大宽度 */
+      margin: 0 auto; /* 居中 */
     }
 
     .card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
     }
 
     /* 打赏卡片 - 暖色调 */
     .tip-card {
-      border-top: 5px solid #48bb78;
+      border-top: 6px solid #48bb78; /* 加粗顶部边框 */
     }
 
     /* 应用卡片 - 冷色调 */
     .app-card {
-      border-top: 5px solid #4299e1;
+      border-top: 6px solid #4299e1; /* 加粗顶部边框 */
     }
 
-    /* 卡片标题 */
+    /* 卡片标题 - 放大更清晰 */
     .card-title {
-      font-size: 24px;
+      font-size: 32px; /* 大幅放大卡片标题 */
       color: #2d3748;
-      font-weight: 600;
-      margin-bottom: 25px;
+      font-weight: 700;
+      margin-bottom: 30px; /* 加大间距 */
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 15px;
     }
 
-    .card-title i {
-      font-size: 28px;
-    }
-
-    /* 按钮通用样式 */
+    /* 按钮通用样式 - 放大更大气 */
     .btn {
-      padding: 22px 45px;
-      font-size: 22px;
-      font-weight: 600;
-      border-radius: 12px;
+      padding: 28px 50px; /* 加大按钮内边距 */
+      font-size: 26px; /* 放大按钮文字 */
+      font-weight: 700;
+      border-radius: 16px; /* 更大圆角 */
       cursor: pointer;
       transition: all 0.2s ease;
-      margin: 12px 0;
+      margin: 15px 0; /* 加大按钮间距 */
       width: 100%;
       border: none;
       text-decoration: none;
       display: inline-block;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* 更明显阴影 */
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
     .btn:active {
       transform: translateY(0);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     /* 禁用状态 */
@@ -442,11 +150,12 @@
       background: #ede9fe;
     }
 
-    /* 状态提示 */
+    /* 状态提示 - 放大更清晰 */
     .status {
-      font-size: 18px;
-      margin: 20px 0;
-      min-height: 24px;
+      font-size: 22px; /* 放大状态文字 */
+      margin: 25px 0;
+      min-height: 30px;
+      font-weight: 500;
     }
 
     .status.success {
@@ -461,22 +170,23 @@
       color: #dd6b20;
     }
 
-    /* 页脚说明 */
+    /* 页脚说明 - 放大更清晰 */
     .card-footer {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #a0aec0;
+      margin-top: 25px;
+      font-size: 18px; /* 放大页脚文字 */
+      color: #718096; /* 加深颜色更清晰 */
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- 标题区 - 轻量化设计 -->
+    <!-- 标题区 - 置顶无空行 -->
     <div class="header">
       <h1 class="main-title">🎮 20Q Game</h1>
     </div>
 
-    <!-- 打赏操作区 - 暖色调卡片 -->
+    <!-- 打赏操作区 - 大气卡片 -->
     <div class="card tip-card">
       <h2 class="card-title">
         <span>☕️ 给作者买一杯咖啡</span>
@@ -487,7 +197,7 @@
       <p class="card-footer">感谢支持 ❤️</p>
     </div>
 
-    <!-- 应用入口区 - 冷色调卡片 -->
+    <!-- 应用入口区 - 大气卡片 -->
     <div class="card app-card">
       <h2 class="card-title">
         <span>🎮 进入 20Q 游戏应用</span>
