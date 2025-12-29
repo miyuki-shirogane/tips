@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>☕️ 打赏</title>
+  <title>☕️ 打赏 & 进入应用</title>
   <style>
     body {
       display: flex;
@@ -52,6 +52,8 @@
       margin: 12px 0;
       width: 100%;
       box-sizing: border-box;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .btn:hover {
@@ -65,29 +67,26 @@
       transform: translateY(0);
     }
 
-    /* 禁用状态 */
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-      background: #f5f5f5 !important;
-      border-color: #ddd !important;
+    /* 打赏按钮样式 */
+    #tipBtn {
+      border-color: #48bb78;
+      color: #48bb78;
     }
 
-    /* 连接按钮特殊样式 */
-    #connectBtn {
+    #tipBtn:hover:not(:disabled) {
+      background: #f0fdf4;
+      border-color: #38a169;
+    }
+
+    /* 进入应用按钮样式 */
+    #enterAppBtn {
       border-color: #4299e1;
       color: #4299e1;
     }
 
-    #connectBtn:hover:not(:disabled) {
+    #enterAppBtn:hover:not(:disabled) {
       background: #e8f4ff;
       border-color: #3182ce;
-    }
-
-    /* 打赏按钮特殊样式 */
-    #tipBtn {
-      display: none;
     }
 
     /* 状态提示 */
@@ -105,46 +104,6 @@
       color: #e53e3e;
     }
 
-    .status.warning {
-      color: #dd6b20;
-    }
-
-    /* 用户地址展示 */
-    .address {
-      font-size: 16px;
-      color: #666;
-      margin: 16px 0;
-      word-break: break-all;
-      padding: 12px;
-      background: #f8f8f8;
-      border-radius: 12px;
-    }
-
-    /* 调试日志面板 */
-    .debug-panel {
-      margin: 20px 0;
-      padding: 16px;
-      background: #f0f8ff;
-      border-radius: 12px;
-      text-align: left;
-      font-size: 14px;
-      color: #333;
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #e8f4ff;
-    }
-
-    .debug-panel h4 {
-      margin: 0 0 8px 0;
-      color: #4299e1;
-      font-size: 16px;
-    }
-
-    .debug-log {
-      margin: 4px 0;
-      line-height: 1.4;
-    }
-
     .footer {
       margin-top: 44px;
       font-size: 17px;
@@ -155,25 +114,18 @@
 <body>
   <div class="card">
     <span class="emoji">☕️</span>
-    <h3>请作者喝杯咖啡</h3>
+    <h3>欢迎使用！</h3>
 
     <!-- 状态提示 -->
-    <div id="status" class="status">等待钱包初始化...</div>
-
-    <!-- 调试日志面板 -->
-    <div class="debug-panel">
-      <h4>调试日志（F12控制台可查看更详细信息）：</h4>
-      <div id="debugLogs"></div>
-    </div>
-
-    <!-- 用户地址 -->
-    <div id="addressContainer" class="address" style="display: none;"></div>
-
-    <!-- 连接钱包按钮 -->
-    <button id="connectBtn" class="btn" disabled>连接 SupeRISE 钱包</button>
+    <div id="status" class="status">已检测到 SupeRISE 钱包环境</div>
 
     <!-- 打赏按钮 -->
-    <button id="tipBtn" class="btn">打赏 2000 CKB</button>
+    <button id="tipBtn" class="btn">打赏 2000 CKB 支持作者</button>
+
+    <!-- 进入应用按钮（核心跳转） -->
+    <a href="http://192.168.12.100:8501" target="_self" id="enterAppBtn" class="btn">
+      🚀 进入应用（Streamlit）
+    </a>
 
     <div class="footer">
       感谢支持 ❤️
@@ -183,187 +135,59 @@
   <script>
     // 配置项
     const CONFIG = {
-      // 延长超时时间到20秒（适配新开标签页的Bridge注入延迟）
-      CONNECT_TIMEOUT: 20000,
-      // 打赏地址和金额
       TIP_ADDRESS: "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
-      TIP_AMOUNT: 2000 * 10 ** 8 // 2000 CKB
+      TIP_AMOUNT: 2000 * 10 ** 8, // 2000 CKB
+      STREAMLIT_URL: "http://192.168.12.100:8501"
     };
-
-    // 全局状态
-    let walletConnected = false;
-    let walletAddress = "";
-    let connectTimer = null;
-    let debugLogIndex = 0;
-    let isBridgeReady = false; // 新增：标记Bridge是否就绪
 
     // DOM 元素
     const statusEl = document.getElementById("status");
-    const connectBtn = document.getElementById("connectBtn");
     const tipBtn = document.getElementById("tipBtn");
-    const addressContainer = document.getElementById("addressContainer");
-    const debugLogsEl = document.getElementById("debugLogs");
+    const enterAppBtn = document.getElementById("enterAppBtn");
 
-    // 调试日志函数
-    function addDebugLog(message, type = "log") {
-      const timestamp = new Date().toLocaleTimeString();
-      const logContent = `[${timestamp}] ${message}`;
-      debugLogIndex++;
-      const logHtml = `<div class="debug-log">[${debugLogIndex}] ${logContent}</div>`;
-
-      debugLogsEl.innerHTML += logHtml;
-      debugLogsEl.scrollTop = debugLogsEl.scrollHeight;
-
-      switch (type) {
-        case "error":
-          console.error(logContent);
-          break;
-        case "warn":
-          console.warn(logContent);
-          break;
-        case "info":
-          console.info(logContent);
-          break;
-        default:
-          console.log(logContent);
+    // 初始化：检测钱包环境
+    function init() {
+      if (!window.superise) {
+        updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");
+        tipBtn.disabled = true;
+        return;
       }
+      updateStatus("已检测到 SupeRISE 钱包，可直接打赏或进入应用", "success");
     }
 
     // 更新状态提示
     function updateStatus(text, type = "normal") {
       statusEl.textContent = text;
       statusEl.className = `status ${type}`;
-      addDebugLog(`状态更新：${text} (类型：${type})`, "info");
     }
 
-    // 初始化钱包环境（等待Bridge就绪后执行）
-    function initWalletEnv() {
-      addDebugLog("开始初始化钱包环境", "info");
-
-      // 检测是否是 SupeRISE 钱包环境
-      if (!window.superise) {
-        addDebugLog("未检测到window.superise，非SupeRISE钱包环境", "error");
-        updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");
-        connectBtn.disabled = true;
-        return;
-      }
-
-      addDebugLog("已检测到SupeRISE钱包环境，超时时间设置为20秒", "info");
-      updateStatus("已检测到 SupeRISE 钱包，请点击按钮连接", "warning");
-      connectBtn.disabled = false;
-
-      // 绑定连接按钮事件
-      connectBtn.addEventListener("click", connectWalletWithTimeout);
-      // 绑定打赏按钮事件
-      tipBtn.addEventListener("click", handleTip);
-    }
-
-    // 连接钱包（带超时）
-    async function connectWalletWithTimeout() {
-      addDebugLog("用户点击连接钱包按钮，开始连接流程", "info");
-
-      connectBtn.disabled = true;
-      updateStatus("正在请求连接钱包，请在钱包内确认...", "warning");
-
-      const connectStartTime = Date.now();
-      addDebugLog(`连接请求发起，开始计时（超时时间${CONFIG.CONNECT_TIMEOUT}ms）`, "info");
-
-      connectTimer = setTimeout(() => {
-        const timeoutDuration = Date.now() - connectStartTime;
-        addDebugLog(`连接超时！耗时${timeoutDuration}ms，超过设定的${CONFIG.CONNECT_TIMEOUT}ms`, "error");
-        updateStatus("连接超时，请重新尝试（若钱包弹窗未弹出，请刷新页面）", "error");
-        connectBtn.disabled = false;
-        walletConnected = false;
-      }, CONFIG.CONNECT_TIMEOUT);
-
-      try {
-        addDebugLog("开始调用window.superise.connectCkb() API", "info");
-        const walletInfo = await window.superise.connectCkb();
-
-        clearTimeout(connectTimer);
-        addDebugLog("connectCkb调用成功，清除超时定时器", "success");
-
-        walletConnected = true;
-        walletAddress = walletInfo.address;
-        addDebugLog(`钱包连接成功，地址：${walletAddress}`, "success");
-
-        updateStatus("钱包连接成功！", "success");
-        addressContainer.textContent = `当前连接地址：${walletAddress}`;
-        addressContainer.style.display = "block";
-        connectBtn.style.display = "none";
-        tipBtn.style.display = "block";
-      } catch (error) {
-        clearTimeout(connectTimer);
-        addDebugLog(`connectCkb调用失败：${error.message} | 错误栈：${error.stack}`, "error");
-        updateStatus(`连接失败：${error.message}`, "error");
-        connectBtn.disabled = false;
-        walletConnected = false;
-      }
-    }
-
-    // 处理打赏逻辑
+    // 打赏逻辑（保留原秒连功能）
     async function handleTip() {
-      addDebugLog("用户点击打赏按钮", "info");
-
-      if (!walletConnected) {
-        addDebugLog("打赏拦截：钱包未连接", "warn");
-        updateStatus("请先连接钱包", "error");
-        return;
-      }
-
       try {
-        updateStatus("正在发起转账，请在钱包内确认...", "warning");
+        updateStatus("正在发起转账，请在钱包内确认...", "normal");
         tipBtn.disabled = true;
-        addDebugLog("开始调用transferCKB API，过期时间2分钟", "info");
 
         const res = await window.superise.transferCKB(
           CONFIG.TIP_ADDRESS,
           CONFIG.TIP_AMOUNT,
-          Date.now() + 120000 // 2分钟过期时间
+          Date.now() + 120000 // 2分钟过期
         );
 
-        addDebugLog(`打赏成功，交易哈希：${res.txHash}`, "success");
-        updateStatus("打赏成功！感谢你的支持～", "success");
+        updateStatus("打赏成功！感谢支持～", "success");
         alert(`感谢支持！\n交易哈希：${res.txHash}`);
-        window.close();
+        // 打赏后自动跳转应用
+        window.location.href = CONFIG.STREAMLIT_URL;
       } catch (error) {
-        addDebugLog(`打赏失败：${error.message} | 错误栈：${error.stack}`, "error");
         updateStatus(`打赏失败：${error.message}`, "error");
         alert(`已取消或失败：${error.message}`);
         tipBtn.disabled = false;
       }
     }
 
-    // ========== 核心修改：等待Bridge就绪 ==========
-    // 1. 先监听superiseReady事件（Bridge完全就绪的标志）
-    window.addEventListener("superiseReady", () => {
-      addDebugLog("监听到superiseReady事件，钱包Bridge已完全就绪", "success");
-      isBridgeReady = true;
-      initWalletEnv(); // Bridge就绪后再初始化
-    });
-
-    // 2. 兜底：如果10秒内还没触发superiseReady，主动检测
-    setTimeout(() => {
-      if (!isBridgeReady) {
-        addDebugLog("未监听到superiseReady事件，主动检测钱包环境", "warn");
-        initWalletEnv();
-      }
-    }, 10000);
-
-    // 全局错误捕获
-    window.addEventListener("error", (event) => {
-      addDebugLog(`全局错误：${event.message}，文件：${event.filename}，行号：${event.lineno}`, "error");
-    });
-
-    window.addEventListener("unhandledrejection", (event) => {
-      addDebugLog(`未捕获Promise错误：${event.reason?.message || event.reason}`, "error");
-    });
-
-    // 页面加载完成后，先标记状态，等待Bridge就绪
-    window.addEventListener("DOMContentLoaded", () => {
-      addDebugLog("页面DOM加载完成，等待钱包Bridge就绪", "info");
-      updateStatus("等待钱包初始化...", "warning");
-    });
+    // 绑定事件
+    tipBtn.addEventListener("click", handleTip);
+    window.addEventListener("DOMContentLoaded", init);
+    window.addEventListener("superiseReady", init);
   </script>
 </body>
 </html>
