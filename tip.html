@@ -67,10 +67,31 @@
       transform: translateY(0);
     }
 
-    /* 打赏按钮样式 */
+    /* 禁用状态 */
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      background: #f5f5f5 !important;
+      border-color: #ddd !important;
+    }
+
+    /* 连接钱包按钮 */
+    #connectBtn {
+      border-color: #4299e1;
+      color: #4299e1;
+    }
+
+    #connectBtn:hover:not(:disabled) {
+      background: #e8f4ff;
+      border-color: #3182ce;
+    }
+
+    /* 打赏按钮 */
     #tipBtn {
       border-color: #48bb78;
       color: #48bb78;
+      display: none;
     }
 
     #tipBtn:hover:not(:disabled) {
@@ -78,15 +99,15 @@
       border-color: #38a169;
     }
 
-    /* 进入应用按钮样式 */
+    /* 进入应用按钮 */
     #enterAppBtn {
-      border-color: #4299e1;
-      color: #4299e1;
+      border-color: #9f7aea;
+      color: #9f7aea;
     }
 
     #enterAppBtn:hover:not(:disabled) {
-      background: #e8f4ff;
-      border-color: #3182ce;
+      background: #fdf2f8;
+      border-color: #805ad5;
     }
 
     /* 状态提示 */
@@ -104,6 +125,10 @@
       color: #e53e3e;
     }
 
+    .status.warning {
+      color: #dd6b20;
+    }
+
     .footer {
       margin-top: 44px;
       font-size: 17px;
@@ -117,14 +142,17 @@
     <h3>欢迎使用！</h3>
 
     <!-- 状态提示 -->
-    <div id="status" class="status">已检测到 SupeRISE 钱包环境</div>
+    <div id="status" class="status">检测钱包环境中...</div>
+
+    <!-- 连接钱包按钮 -->
+    <button id="connectBtn" class="btn" disabled>连接 SupeRISE 钱包</button>
 
     <!-- 打赏按钮 -->
     <button id="tipBtn" class="btn">打赏 2000 CKB 支持作者</button>
 
-    <!-- 进入应用按钮（核心跳转） -->
+    <!-- 进入应用按钮 -->
     <a href="http://192.168.12.100:8501" target="_self" id="enterAppBtn" class="btn">
-      🚀 进入应用（Streamlit）
+      🚀 进入游戏应用
     </a>
 
     <div class="footer">
@@ -133,49 +161,99 @@
   </div>
 
   <script>
-    // 配置项
+    // 配置项（保留你之前的核心配置）
     const CONFIG = {
+      CONNECT_TIMEOUT: 20000, // 20秒超时
       TIP_ADDRESS: "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
       TIP_AMOUNT: 2000 * 10 ** 8, // 2000 CKB
       STREAMLIT_URL: "http://192.168.12.100:8501"
     };
 
+    // 全局状态（保留连接状态）
+    let walletConnected = false;
+    let connectTimer = null;
+
     // DOM 元素
     const statusEl = document.getElementById("status");
+    const connectBtn = document.getElementById("connectBtn");
     const tipBtn = document.getElementById("tipBtn");
     const enterAppBtn = document.getElementById("enterAppBtn");
 
-    // 初始化：检测钱包环境
-    function init() {
-      if (!window.superise) {
-        updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");
-        tipBtn.disabled = true;
-        return;
-      }
-      updateStatus("已检测到 SupeRISE 钱包，可直接打赏或进入应用", "success");
-    }
-
-    // 更新状态提示
+    // 更新状态提示（保留原有逻辑）
     function updateStatus(text, type = "normal") {
       statusEl.textContent = text;
       statusEl.className = `status ${type}`;
     }
 
-    // 打赏逻辑（保留原秒连功能）
-    async function handleTip() {
+    // 初始化：检测钱包环境（保留原有逻辑）
+    function init() {
+      // 检测钱包环境
+      if (!window.superise) {
+        updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");
+        connectBtn.disabled = true;
+        return;
+      }
+
+      updateStatus("已检测到 SupeRISE 钱包，请点击按钮连接", "warning");
+      connectBtn.disabled = false;
+      // 绑定连接按钮事件
+      connectBtn.addEventListener("click", connectWalletWithTimeout);
+      // 绑定打赏按钮事件
+      tipBtn.addEventListener("click", handleTip);
+    }
+
+    // 连接钱包（保留你验证过的超时逻辑）
+    async function connectWalletWithTimeout() {
+      connectBtn.disabled = true;
+      updateStatus("正在请求连接钱包，请在钱包内确认...", "warning");
+
+      // 设置超时定时器
+      connectTimer = setTimeout(() => {
+        updateStatus("连接超时，请重新尝试", "error");
+        connectBtn.disabled = false;
+        walletConnected = false;
+      }, CONFIG.CONNECT_TIMEOUT);
+
       try {
-        updateStatus("正在发起转账，请在钱包内确认...", "normal");
+        // 显式连接钱包（核心逻辑）
+        const walletInfo = await window.superise.connectCkb();
+        clearTimeout(connectTimer);
+
+        // 连接成功
+        walletConnected = true;
+        updateStatus("钱包连接成功！可点击打赏", "success");
+        connectBtn.style.display = "none";
+        tipBtn.style.display = "block";
+      } catch (error) {
+        clearTimeout(connectTimer);
+        updateStatus(`连接失败：${error.message}`, "error");
+        connectBtn.disabled = false;
+        walletConnected = false;
+      }
+    }
+
+    // 打赏逻辑（保留原有支付逻辑）
+    async function handleTip() {
+      if (!walletConnected) {
+        updateStatus("请先连接钱包", "error");
+        return;
+      }
+
+      try {
+        updateStatus("正在发起转账，请在钱包内确认...", "warning");
         tipBtn.disabled = true;
 
+        // 调用转账API（核心支付逻辑）
         const res = await window.superise.transferCKB(
           CONFIG.TIP_ADDRESS,
           CONFIG.TIP_AMOUNT,
           Date.now() + 120000 // 2分钟过期
         );
 
+        // 支付成功
         updateStatus("打赏成功！感谢支持～", "success");
         alert(`感谢支持！\n交易哈希：${res.txHash}`);
-        // 打赏后自动跳转应用
+        // 自动跳转Streamlit
         window.location.href = CONFIG.STREAMLIT_URL;
       } catch (error) {
         updateStatus(`打赏失败：${error.message}`, "error");
@@ -184,8 +262,7 @@
       }
     }
 
-    // 绑定事件
-    tipBtn.addEventListener("click", handleTip);
+    // 页面加载+Bridge就绪初始化
     window.addEventListener("DOMContentLoaded", init);
     window.addEventListener("superiseReady", init);
   </script>
