@@ -120,7 +120,7 @@
       border-radius: 12px;
     }
 
-    /* 调试日志面板 - 新增样式 */
+    /* 调试日志面板 */
     .debug-panel {
       margin: 20px 0;
       padding: 16px;
@@ -158,9 +158,9 @@
     <h3>请作者喝杯咖啡</h3>
 
     <!-- 状态提示 -->
-    <div id="status" class="status">检测钱包环境中...</div>
+    <div id="status" class="status">等待钱包初始化...</div>
 
-    <!-- 新增：调试日志面板 -->
+    <!-- 调试日志面板 -->
     <div class="debug-panel">
       <h4>调试日志（F12控制台可查看更详细信息）：</h4>
       <div id="debugLogs"></div>
@@ -183,8 +183,8 @@
   <script>
     // 配置项
     const CONFIG = {
-      // 连接超时时间（毫秒），这里设置10秒
-      CONNECT_TIMEOUT: 10000,
+      // 延长超时时间到20秒（适配新开标签页的Bridge注入延迟）
+      CONNECT_TIMEOUT: 20000,
       // 打赏地址和金额
       TIP_ADDRESS: "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
       TIP_AMOUNT: 2000 * 10 ** 8 // 2000 CKB
@@ -194,28 +194,26 @@
     let walletConnected = false;
     let walletAddress = "";
     let connectTimer = null;
-    let debugLogIndex = 0; // 新增：调试日志序号
+    let debugLogIndex = 0;
+    let isBridgeReady = false; // 新增：标记Bridge是否就绪
 
     // DOM 元素
     const statusEl = document.getElementById("status");
     const connectBtn = document.getElementById("connectBtn");
     const tipBtn = document.getElementById("tipBtn");
     const addressContainer = document.getElementById("addressContainer");
-    const debugLogsEl = document.getElementById("debugLogs"); // 新增：调试日志DOM
+    const debugLogsEl = document.getElementById("debugLogs");
 
-    // 新增：调试日志函数（核心新增功能）
+    // 调试日志函数
     function addDebugLog(message, type = "log") {
-      // 生成带时间戳的日志
       const timestamp = new Date().toLocaleTimeString();
       const logContent = `[${timestamp}] ${message}`;
       debugLogIndex++;
       const logHtml = `<div class="debug-log">[${debugLogIndex}] ${logContent}</div>`;
 
-      // 1. 显示在页面调试面板
       debugLogsEl.innerHTML += logHtml;
-      debugLogsEl.scrollTop = debugLogsEl.scrollHeight; // 自动滚动到最新日志
+      debugLogsEl.scrollTop = debugLogsEl.scrollHeight;
 
-      // 2. 打印到浏览器控制台（区分类型）
       switch (type) {
         case "error":
           console.error(logContent);
@@ -231,20 +229,26 @@
       }
     }
 
-    // 初始化：检测钱包环境
-    function init() {
-      addDebugLog("页面初始化开始，检测钱包环境", "info"); // 新增日志
+    // 更新状态提示
+    function updateStatus(text, type = "normal") {
+      statusEl.textContent = text;
+      statusEl.className = `status ${type}`;
+      addDebugLog(`状态更新：${text} (类型：${type})`, "info");
+    }
+
+    // 初始化钱包环境（等待Bridge就绪后执行）
+    function initWalletEnv() {
+      addDebugLog("开始初始化钱包环境", "info");
 
       // 检测是否是 SupeRISE 钱包环境
       if (!window.superise) {
-        addDebugLog("未检测到window.superise，非SupeRISE钱包环境", "error"); // 新增日志
+        addDebugLog("未检测到window.superise，非SupeRISE钱包环境", "error");
         updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");
         connectBtn.disabled = true;
         return;
       }
 
-      addDebugLog("已检测到SupeRISE钱包环境，超时时间设置为10秒", "info"); // 新增日志
-      // 检测到钱包环境，准备连接
+      addDebugLog("已检测到SupeRISE钱包环境，超时时间设置为20秒", "info");
       updateStatus("已检测到 SupeRISE 钱包，请点击按钮连接", "warning");
       connectBtn.disabled = false;
 
@@ -254,70 +258,55 @@
       tipBtn.addEventListener("click", handleTip);
     }
 
-    // 更新状态提示（新增日志）
-    function updateStatus(text, type = "normal") {
-      statusEl.textContent = text;
-      statusEl.className = `status ${type}`;
-      addDebugLog(`状态更新：${text} (类型：${type})`, "info"); // 新增日志
-    }
-
-    // 连接钱包（带超时，新增详细日志）
+    // 连接钱包（带超时）
     async function connectWalletWithTimeout() {
-      addDebugLog("用户点击连接钱包按钮，开始连接流程", "info"); // 新增日志
+      addDebugLog("用户点击连接钱包按钮，开始连接流程", "info");
 
-      // 禁用连接按钮，防止重复点击
       connectBtn.disabled = true;
       updateStatus("正在请求连接钱包，请在钱包内确认...", "warning");
 
-      // 记录连接开始时间（新增）
       const connectStartTime = Date.now();
-      addDebugLog(`连接请求发起，开始计时（超时时间${CONFIG.CONNECT_TIMEOUT}ms）`, "info"); // 新增日志
+      addDebugLog(`连接请求发起，开始计时（超时时间${CONFIG.CONNECT_TIMEOUT}ms）`, "info");
 
-      // 设置超时定时器
       connectTimer = setTimeout(() => {
         const timeoutDuration = Date.now() - connectStartTime;
-        addDebugLog(`连接超时！耗时${timeoutDuration}ms，超过设定的${CONFIG.CONNECT_TIMEOUT}ms`, "error"); // 新增日志
-        updateStatus("连接超时，请重新尝试", "error");
+        addDebugLog(`连接超时！耗时${timeoutDuration}ms，超过设定的${CONFIG.CONNECT_TIMEOUT}ms`, "error");
+        updateStatus("连接超时，请重新尝试（若钱包弹窗未弹出，请刷新页面）", "error");
         connectBtn.disabled = false;
         walletConnected = false;
       }, CONFIG.CONNECT_TIMEOUT);
 
       try {
-        addDebugLog("开始调用window.superise.connectCkb() API", "info"); // 新增日志
-        // 显式调用连接钱包 API
+        addDebugLog("开始调用window.superise.connectCkb() API", "info");
         const walletInfo = await window.superise.connectCkb();
 
-        // 清除超时定时器
         clearTimeout(connectTimer);
-        addDebugLog("connectCkb调用成功，清除超时定时器", "success"); // 新增日志
+        addDebugLog("connectCkb调用成功，清除超时定时器", "success");
 
-        // 连接成功
         walletConnected = true;
         walletAddress = walletInfo.address;
-        addDebugLog(`钱包连接成功，地址：${walletAddress}`, "success"); // 新增日志
+        addDebugLog(`钱包连接成功，地址：${walletAddress}`, "success");
 
-        // 更新界面
         updateStatus("钱包连接成功！", "success");
         addressContainer.textContent = `当前连接地址：${walletAddress}`;
         addressContainer.style.display = "block";
         connectBtn.style.display = "none";
         tipBtn.style.display = "block";
       } catch (error) {
-        // 连接失败
         clearTimeout(connectTimer);
-        addDebugLog(`connectCkb调用失败：${error.message} | 错误栈：${error.stack}`, "error"); // 新增日志
+        addDebugLog(`connectCkb调用失败：${error.message} | 错误栈：${error.stack}`, "error");
         updateStatus(`连接失败：${error.message}`, "error");
         connectBtn.disabled = false;
         walletConnected = false;
       }
     }
 
-    // 处理打赏逻辑（仅新增基础日志，不修改原有逻辑）
+    // 处理打赏逻辑
     async function handleTip() {
-      addDebugLog("用户点击打赏按钮", "info"); // 新增日志
+      addDebugLog("用户点击打赏按钮", "info");
 
       if (!walletConnected) {
-        addDebugLog("打赏拦截：钱包未连接", "warn"); // 新增日志
+        addDebugLog("打赏拦截：钱包未连接", "warn");
         updateStatus("请先连接钱包", "error");
         return;
       }
@@ -325,36 +314,43 @@
       try {
         updateStatus("正在发起转账，请在钱包内确认...", "warning");
         tipBtn.disabled = true;
-        addDebugLog("开始调用transferCKB API，过期时间2分钟", "info"); // 新增日志
+        addDebugLog("开始调用transferCKB API，过期时间2分钟", "info");
 
-        // 调用转账 API
         const res = await window.superise.transferCKB(
           CONFIG.TIP_ADDRESS,
           CONFIG.TIP_AMOUNT,
           Date.now() + 120000 // 2分钟过期时间
         );
 
-        // 转账成功
-        addDebugLog(`打赏成功，交易哈希：${res.txHash}`, "success"); // 新增日志
+        addDebugLog(`打赏成功，交易哈希：${res.txHash}`, "success");
         updateStatus("打赏成功！感谢你的支持～", "success");
         alert(`感谢支持！\n交易哈希：${res.txHash}`);
         window.close();
       } catch (error) {
-        // 转账失败
-        addDebugLog(`打赏失败：${error.message} | 错误栈：${error.stack}`, "error"); // 新增日志
+        addDebugLog(`打赏失败：${error.message} | 错误栈：${error.stack}`, "error");
         updateStatus(`打赏失败：${error.message}`, "error");
         alert(`已取消或失败：${error.message}`);
         tipBtn.disabled = false;
       }
     }
 
-    // 新增：监听superiseReady事件并打印日志
+    // ========== 核心修改：等待Bridge就绪 ==========
+    // 1. 先监听superiseReady事件（Bridge完全就绪的标志）
     window.addEventListener("superiseReady", () => {
-      addDebugLog("监听到superiseReady事件，钱包桥接已就绪", "success");
-      updateStatus("钱包桥接已就绪，请点击按钮连接", "warning");
+      addDebugLog("监听到superiseReady事件，钱包Bridge已完全就绪", "success");
+      isBridgeReady = true;
+      initWalletEnv(); // Bridge就绪后再初始化
     });
 
-    // 新增：全局错误捕获
+    // 2. 兜底：如果10秒内还没触发superiseReady，主动检测
+    setTimeout(() => {
+      if (!isBridgeReady) {
+        addDebugLog("未监听到superiseReady事件，主动检测钱包环境", "warn");
+        initWalletEnv();
+      }
+    }, 10000);
+
+    // 全局错误捕获
     window.addEventListener("error", (event) => {
       addDebugLog(`全局错误：${event.message}，文件：${event.filename}，行号：${event.lineno}`, "error");
     });
@@ -363,10 +359,10 @@
       addDebugLog(`未捕获Promise错误：${event.reason?.message || event.reason}`, "error");
     });
 
-    // 页面加载完成后初始化
+    // 页面加载完成后，先标记状态，等待Bridge就绪
     window.addEventListener("DOMContentLoaded", () => {
-      addDebugLog("页面DOM加载完成，准备执行初始化", "info"); // 新增日志
-      init();
+      addDebugLog("页面DOM加载完成，等待钱包Bridge就绪", "info");
+      updateStatus("等待钱包初始化...", "warning");
     });
   </script>
 </body>
