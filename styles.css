@@ -1,177 +1,3 @@
-/** {*/
-/*  margin: 0;*/
-/*  padding: 0;*/
-/*  box-sizing: border-box;*/
-/*}*/
-
-/*body {*/
-/*  min-height: 100vh;*/
-/*  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;*/
-/*  background: linear-gradient(135deg, #f8f9fa, #e9ecef);*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  padding: 0; !* 移除页面默认内边距，置顶显示 *!*/
-/*  margin: 0;*/
-/*  align-items: flex-start; !* 置顶对齐 *!*/
-/*  padding-top: 40px; !* 顶部仅留少量间距，避免贴边 *!*/
-/*}*/
-
-/*.container {*/
-/*  width: 100%;*/
-/*  max-width: 750px; !* 加宽容器，更大气 *!*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  gap: 30px; !* 加大卡片间距 *!*/
-/*  padding: 0 20px;*/
-/*}*/
-
-/*!* 标题区域 - 放大更醒目 *!*/
-/*.header {*/
-/*  text-align: center;*/
-/*  padding: 15px 0;*/
-/*  position: relative;*/
-/*  margin-bottom: 10px;*/
-/*}*/
-
-/*.main-title {*/
-/*  font-size: 48px; !* 放大标题 *!*/
-/*  color: #2d3748;*/
-/*  font-weight: 800; !* 加粗更醒目 *!*/
-/*  letter-spacing: 1px; !* 字间距更舒展 *!*/
-/*}*/
-
-/*!* 通用操作卡片样式 - 放大更大气 *!*/
-/*.card {*/
-/*  background: #fff;*/
-/*  border-radius: 28px; !* 更大圆角 *!*/
-/*  box-shadow: 0 15px 35px rgba(0,0,0,0.1); !* 更明显阴影 *!*/
-/*  padding: 45px 50px; !* 加大内边距，更饱满 *!*/
-/*  text-align: center;*/
-/*  transition: transform 0.2s ease;*/
-/*  width: 100%;*/
-/*  max-width: 700px; !* 加大卡片最大宽度 *!*/
-/*  margin: 0 auto; !* 居中 *!*/
-/*}*/
-
-/*.card:hover {*/
-/*  transform: translateY(-4px);*/
-/*}*/
-
-/*!* 打赏卡片 - 暖色调 *!*/
-/*.tip-card {*/
-/*  border-top: 6px solid #48bb78; !* 加粗顶部边框 *!*/
-/*}*/
-
-/*!* 应用卡片 - 冷色调 *!*/
-/*.app-card {*/
-/*  border-top: 6px solid #4299e1; !* 加粗顶部边框 *!*/
-/*}*/
-
-/*!* 卡片标题 - 放大更清晰 *!*/
-/*.card-title {*/
-/*  font-size: 32px; !* 大幅放大卡片标题 *!*/
-/*  color: #2d3748;*/
-/*  font-weight: 700;*/
-/*  margin-bottom: 30px; !* 加大间距 *!*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  justify-content: center;*/
-/*  gap: 15px;*/
-/*}*/
-
-/*!* 按钮通用样式 - 放大更大气 *!*/
-/*.btn {*/
-/*  padding: 28px 50px; !* 加大按钮内边距 *!*/
-/*  font-size: 26px; !* 放大按钮文字 *!*/
-/*  font-weight: 700;*/
-/*  border-radius: 16px; !* 更大圆角 *!*/
-/*  cursor: pointer;*/
-/*  transition: all 0.2s ease;*/
-/*  margin: 15px 0; !* 加大按钮间距 *!*/
-/*  width: 100%;*/
-/*  border: none;*/
-/*  text-decoration: none;*/
-/*  display: inline-block;*/
-/*  box-shadow: 0 6px 15px rgba(0,0,0,0.1); !* 更明显阴影 *!*/
-/*}*/
-
-/*.btn:hover {*/
-/*  transform: translateY(-3px);*/
-/*  box-shadow: 0 8px 20px rgba(0,0,0,0.15);*/
-/*}*/
-
-/*.btn:active {*/
-/*  transform: translateY(0);*/
-/*  box-shadow: 0 4px 10px rgba(0,0,0,0.1);*/
-/*}*/
-
-/*!* 禁用状态 *!*/
-/*.btn:disabled {*/
-/*  opacity: 0.6;*/
-/*  cursor: not-allowed;*/
-/*  transform: none !important;*/
-/*  box-shadow: none !important;*/
-/*}*/
-
-/*!* 连接钱包按钮 *!*/
-/*#connectBtn {*/
-/*  background: #e8f4ff;*/
-/*  color: #4299e1;*/
-/*}*/
-
-/*#connectBtn:hover:not(:disabled) {*/
-/*  background: #dbeafe;*/
-/*}*/
-
-/*!* 打赏按钮 *!*/
-/*#tipBtn {*/
-/*  background: #f0fdf4;*/
-/*  color: #48bb78;*/
-/*  display: none;*/
-/*}*/
-
-/*#tipBtn:hover:not(:disabled) {*/
-/*  background: #dcfce7;*/
-/*}*/
-
-/*!* 进入应用按钮 *!*/
-/*#enterAppBtn {*/
-/*  background: #f5f3ff;*/
-/*  color: #9f7aea;*/
-/*}*/
-
-/*#enterAppBtn:hover:not(:disabled) {*/
-/*  background: #ede9fe;*/
-/*}*/
-
-/*!* 状态提示 - 放大更清晰 *!*/
-/*.status {*/
-/*  font-size: 22px; !* 放大状态文字 *!*/
-/*  margin: 25px 0;*/
-/*  min-height: 30px;*/
-/*  font-weight: 500;*/
-/*}*/
-
-/*.status.success {*/
-/*  color: #38a169;*/
-/*}*/
-
-/*.status.error {*/
-/*  color: #e53e3e;*/
-/*}*/
-
-/*.status.warning {*/
-/*  color: #dd6b20;*/
-/*}*/
-
-/*!* 页脚说明 - 放大更清晰 *!*/
-/*.card-footer {*/
-/*  margin-top: 25px;*/
-/*  font-size: 18px; !* 放大页脚文字 *!*/
-/*  color: #718096; !* 加深颜色更清晰 *!*/
-/*  font-weight: 500;*/
-/*}*/
-
 /* ===== Reset ===== */
 * {
   margin: 0;
@@ -183,7 +9,7 @@
 body {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f6fa;
+  background: #f0f4f8;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -193,67 +19,67 @@ body {
 /* ===== Container ===== */
 .container {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ===== 单张大卡片 ===== */
 .main-card {
-  background: #fff;
-  border-radius: 28px;
-  padding: 36px 24px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+  background: #ffffff;
+  border-radius: 32px;
+  padding: 48px 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 32px;
   align-items: center;
+  width: 100%;
 }
 
 /* ===== 卡片标题 ===== */
 .card-title {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 800;
   color: #2d3748;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   text-align: center;
 }
 
 /* ===== Buttons ===== */
 .btn {
   width: 100%;
-  height: 50px;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 600;
+  max-width: 320px;
+  height: 56px;
+  border-radius: 18px;
+  font-size: 18px;
+  font-weight: 700;
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 /* 主按钮：进入游戏 */
 .btn-primary {
   background: linear-gradient(135deg, #667eea, #805ad5);
   color: #fff;
-  font-size: 18px;
-  font-weight: 700;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(102,126,234,0.35);
+  box-shadow: 0 14px 36px rgba(102,126,234,0.35);
 }
 
 /* 次按钮：连接钱包 / 打赏 */
 .btn-secondary {
   background: #f0fdf4;
   color: #48bb78;
-  font-size: 16px;
   margin-top: 16px;
-  width: 80%;
-  max-width: 280px;
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -277,16 +103,16 @@ body {
   font-size: 14px;
   text-align: center;
   min-height: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .status.success { color: #38a169; }
 .status.error { color: #e53e3e; }
-.status.warning { color: #718096; } /* 灰蓝色，提示用途，不抢主按钮风头 */
+.status.warning { color: #718096; } /* 灰蓝色提示 */
 
 /* ===== 手机自适应 ===== */
 @media (max-width: 400px) {
-  .card-title { font-size: 24px; }
-  .btn { height: 44px; font-size: 14px; }
-  .main-card { padding: 28px 20px; }
+  .card-title { font-size: 28px; }
+  .btn { height: 50px; font-size: 16px; max-width: 280px; }
+  .main-card { padding: 36px 24px; gap: 24px; }
 }
