@@ -1,319 +1,77 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8" />-->
+<!--  <title>🎮 20Q Game</title>-->
+<!--  <link rel="stylesheet" href="./styles.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--  <div class="container">-->
+<!--    &lt;!&ndash; 标题区 - 置顶无空行 &ndash;&gt;-->
+<!--    <div class="header">-->
+<!--      <h1 class="main-title">🎮 20Q Game</h1>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; 打赏操作区 - 大气卡片 &ndash;&gt;-->
+<!--    <div class="card tip-card">-->
+<!--      <h2 class="card-title">-->
+<!--        <span>☕️ 给作者买一杯咖啡</span>-->
+<!--      </h2>-->
+<!--      <div id="status" class="status">检测钱包环境中...</div>-->
+<!--      <button id="connectBtn" class="btn" disabled>连接 SupeRISE 钱包</button>-->
+<!--      <button id="tipBtn" class="btn">打赏 2000 CKB 支持作者</button>-->
+<!--      <p class="card-footer">感谢支持 ❤️</p>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; 应用入口区 - 大气卡片 &ndash;&gt;-->
+<!--    <div class="card app-card">-->
+<!--      <h2 class="card-title">-->
+<!--        <span>🎮 进入 20Q 游戏应用</span>-->
+<!--      </h2>-->
+<!--      <a href="http://192.168.12.100:8501" target="_self" id="enterAppBtn" class="btn">-->
+<!--        立即进入应用-->
+<!--      </a>-->
+<!--      <p class="card-footer">无需打赏，也可以直接进入 🚀</p>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  -->
+<!--  <script src="./app.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎮 20Q Game</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-      display: flex;
-      justify-content: center;
-      padding: 0; /* 移除页面默认内边距，置顶显示 */
-      margin: 0;
-      align-items: flex-start; /* 置顶对齐 */
-      padding-top: 40px; /* 顶部仅留少量间距，避免贴边 */
-    }
-
-    .container {
-      width: 100%;
-      max-width: 750px; /* 加宽容器，更大气 */
-      display: flex;
-      flex-direction: column;
-      gap: 30px; /* 加大卡片间距 */
-      padding: 0 20px;
-    }
-
-    /* 标题区域 - 放大更醒目 */
-    .header {
-      text-align: center;
-      padding: 15px 0;
-      position: relative;
-      margin-bottom: 10px;
-    }
-
-    .main-title {
-      font-size: 48px; /* 放大标题 */
-      color: #2d3748;
-      font-weight: 800; /* 加粗更醒目 */
-      letter-spacing: 1px; /* 字间距更舒展 */
-    }
-
-    /* 通用操作卡片样式 - 放大更大气 */
-    .card {
-      background: #fff;
-      border-radius: 28px; /* 更大圆角 */
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1); /* 更明显阴影 */
-      padding: 45px 50px; /* 加大内边距，更饱满 */
-      text-align: center;
-      transition: transform 0.2s ease;
-      width: 100%;
-      max-width: 700px; /* 加大卡片最大宽度 */
-      margin: 0 auto; /* 居中 */
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-    }
-
-    /* 打赏卡片 - 暖色调 */
-    .tip-card {
-      border-top: 6px solid #48bb78; /* 加粗顶部边框 */
-    }
-
-    /* 应用卡片 - 冷色调 */
-    .app-card {
-      border-top: 6px solid #4299e1; /* 加粗顶部边框 */
-    }
-
-    /* 卡片标题 - 放大更清晰 */
-    .card-title {
-      font-size: 32px; /* 大幅放大卡片标题 */
-      color: #2d3748;
-      font-weight: 700;
-      margin-bottom: 30px; /* 加大间距 */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    /* 按钮通用样式 - 放大更大气 */
-    .btn {
-      padding: 28px 50px; /* 加大按钮内边距 */
-      font-size: 26px; /* 放大按钮文字 */
-      font-weight: 700;
-      border-radius: 16px; /* 更大圆角 */
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin: 15px 0; /* 加大按钮间距 */
-      width: 100%;
-      border: none;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* 更明显阴影 */
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    /* 禁用状态 */
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-      box-shadow: none !important;
-    }
-
-    /* 连接钱包按钮 */
-    #connectBtn {
-      background: #e8f4ff;
-      color: #4299e1;
-    }
-
-    #connectBtn:hover:not(:disabled) {
-      background: #dbeafe;
-    }
-
-    /* 打赏按钮 */
-    #tipBtn {
-      background: #f0fdf4;
-      color: #48bb78;
-      display: none;
-    }
-
-    #tipBtn:hover:not(:disabled) {
-      background: #dcfce7;
-    }
-
-    /* 进入应用按钮 */
-    #enterAppBtn {
-      background: #f5f3ff;
-      color: #9f7aea;
-    }
-
-    #enterAppBtn:hover:not(:disabled) {
-      background: #ede9fe;
-    }
-
-    /* 状态提示 - 放大更清晰 */
-    .status {
-      font-size: 22px; /* 放大状态文字 */
-      margin: 25px 0;
-      min-height: 30px;
-      font-weight: 500;
-    }
-
-    .status.success {
-      color: #38a169;
-    }
-
-    .status.error {
-      color: #e53e3e;
-    }
-
-    .status.warning {
-      color: #dd6b20;
-    }
-
-    /* 页脚说明 - 放大更清晰 */
-    .card-footer {
-      margin-top: 25px;
-      font-size: 18px; /* 放大页脚文字 */
-      color: #718096; /* 加深颜色更清晰 */
-      font-weight: 500;
-    }
-  </style>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <div class="container">
-    <!-- 标题区 - 置顶无空行 -->
-    <div class="header">
-      <h1 class="main-title">🎮 20Q Game</h1>
-    </div>
+    <!-- 单张大卡片 -->
+    <div class="card main-card">
+      <h1 class="card-title">🎮 20Q Game</h1>
 
-    <!-- 打赏操作区 - 大气卡片 -->
-    <div class="card tip-card">
-      <h2 class="card-title">
-        <span>☕️ 给作者买一杯咖啡</span>
-      </h2>
-      <div id="status" class="status">检测钱包环境中...</div>
-      <button id="connectBtn" class="btn" disabled>连接 SupeRISE 钱包</button>
-      <button id="tipBtn" class="btn">打赏 2000 CKB 支持作者</button>
-      <p class="card-footer">感谢支持 ❤️</p>
-    </div>
-
-    <!-- 应用入口区 - 大气卡片 -->
-    <div class="card app-card">
-      <h2 class="card-title">
-        <span>🎮 进入 20Q 游戏应用</span>
-      </h2>
-      <a href="http://192.168.12.100:8501" target="_self" id="enterAppBtn" class="btn">
-        立即进入应用
+      <!-- 游戏入口按钮 -->
+      <a href="http://192.168.12.100:8501" target="_self" id="enterAppBtn" class="btn btn-primary">
+        进入游戏
       </a>
-      <p class="card-footer">无需打赏，也可以直接进入 🚀</p>
+
+      <!-- 打赏区域 -->
+      <div id="tipSection">
+        <!-- 状态提示区，显示连接钱包用途和状态 -->
+        <div id="status" class="status warning">连接钱包后可给作者买杯咖啡 ☕</div>
+
+        <!-- 钱包连接按钮 -->
+        <button id="connectBtn" class="btn btn-secondary" disabled>连接 SupeRISE 钱包</button>
+
+        <!-- 打赏按钮，JS 控制显示 -->
+        <button id="tipBtn" class="btn btn-secondary">请作者喝杯咖啡</button>
+      </div>
     </div>
   </div>
 
-  <script>
-    // 配置项
-    const CONFIG = {
-      CONNECT_TIMEOUT: 20000, // 20秒超时
-      TIP_ADDRESS: "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
-      TIP_AMOUNT: 2000 * 10 ** 8, // 2000 CKB
-      STREAMLIT_URL: "http://192.168.12.100:8501"
-    };
-
-    // 全局状态
-    let walletConnected = false;
-    let connectTimer = null;
-
-    // DOM 元素
-    const statusEl = document.getElementById("status");
-    const connectBtn = document.getElementById("connectBtn");
-    const tipBtn = document.getElementById("tipBtn");
-    const enterAppBtn = document.getElementById("enterAppBtn");
-
-    // 更新状态提示
-    function updateStatus(text, type = "normal") {
-      statusEl.textContent = text;
-      statusEl.className = `status ${type}`;
-    }
-
-    // 初始化：检测钱包环境
-    function init() {
-      // 检测钱包环境
-      if (!window.superise) {
-        updateStatus("非 SupeRISE 钱包环境，请在钱包内打开", "error");
-        connectBtn.disabled = true;
-        return;
-      }
-
-      updateStatus("已检测到 SupeRISE 钱包，请点击按钮连接", "warning");
-      connectBtn.disabled = false;
-      // 绑定连接按钮事件
-      connectBtn.addEventListener("click", connectWalletWithTimeout);
-      // 绑定打赏按钮事件
-      tipBtn.addEventListener("click", handleTip);
-    }
-
-    // 连接钱包
-    async function connectWalletWithTimeout() {
-      connectBtn.disabled = true;
-      updateStatus("正在请求连接钱包，请在钱包内确认...", "warning");
-
-      // 设置超时定时器
-      connectTimer = setTimeout(() => {
-        updateStatus("连接超时，请重新尝试", "error");
-        connectBtn.disabled = false;
-        walletConnected = false;
-      }, CONFIG.CONNECT_TIMEOUT);
-
-      try {
-        // 显式连接钱包
-        const walletInfo = await window.superise.connectCkb();
-        clearTimeout(connectTimer);
-
-        // 连接成功
-        walletConnected = true;
-        updateStatus("钱包连接成功！可点击打赏", "success");
-        connectBtn.style.display = "none";
-        tipBtn.style.display = "block";
-      } catch (error) {
-        clearTimeout(connectTimer);
-        updateStatus(`连接失败：${error.message}`, "error");
-        connectBtn.disabled = false;
-        walletConnected = false;
-      }
-    }
-
-    // 打赏逻辑
-    async function handleTip() {
-      if (!walletConnected) {
-        updateStatus("请先连接钱包", "error");
-        return;
-      }
-
-      try {
-        updateStatus("正在发起转账，请在钱包内确认...", "warning");
-        tipBtn.disabled = true;
-
-        // 调用转账API
-        const res = await window.superise.transferCKB(
-          CONFIG.TIP_ADDRESS,
-          CONFIG.TIP_AMOUNT,
-          Date.now() + 120000 // 2分钟过期
-        );
-
-        // 支付成功
-        updateStatus("打赏成功！感谢支持～", "success");
-        alert(`感谢支持！\n交易哈希：${res.txHash}`);
-        // 自动跳转Streamlit
-        window.location.href = CONFIG.STREAMLIT_URL;
-      } catch (error) {
-        updateStatus(`打赏失败：${error.message}`, "error");
-        alert(`已取消或失败：${error.message}`);
-        tipBtn.disabled = false;
-      }
-    }
-
-    // 页面加载+Bridge就绪初始化
-    window.addEventListener("DOMContentLoaded", init);
-    window.addEventListener("superiseReady", init);
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>
