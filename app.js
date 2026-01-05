@@ -3,7 +3,7 @@ const CONFIG = {
   CONNECT_TIMEOUT: 20000, // 20秒超时
   TIP_ADDRESS: "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx4q8n46evp22qlt934kn93auhp8kgrmkggxvm0n",
   TIP_AMOUNT: 2000 * 10 ** 8, // 2000 CKB
-  STREAMLIT_URL: "http://192.168.12.100:8501"
+  STREAMLIT_URL: "http://192.168.12.173:8501"
 };
 
 // 全局状态
